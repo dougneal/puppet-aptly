@@ -124,6 +124,8 @@ define aptly::mirror (
       command => "${gpg_cmd} --keyserver '${keyserver}' --recv-keys '${key_string}'",
       unless  => "echo '${key_string}' | xargs -n1 ${gpg_cmd} --list-keys",
       user    => $::aptly::user,
+      # GPG returns 2 when importing the key without assigning a trust level to it
+      returns => [0, 2],
     }
 
     $exec_aptly_mirror_create_require = [
